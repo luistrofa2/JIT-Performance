@@ -7,8 +7,8 @@ interval ?= 100
 program ?= binarytrees.erl
 program_name ?= binarytrees
 
-executable_path ?= /home/maia/otp_src_27.0_no_jit/bin/erl
-executable_path_jit ?= /home/maia/otp_src_27.0/bin/erl
+executable_path ?= otp_src_27.0_no_jit/bin/erl
+executable_path_jit ?= otp_src_27.0/bin/erl
 
 language ?= Erlang
 language_jit ?= Erlang_JIT

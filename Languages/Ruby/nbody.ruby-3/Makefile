@@ -7,8 +7,8 @@ interval ?= 100
 program ?= binarytrees.ruby
 program_name ?= binarytrees
 
-executable_path ?= /home/maia/.rbenv/versions/3.4.0/bin/ruby
-executable_path_jit ?= /home/maia/.rbenv/versions/3.4.0/bin/ruby --yjit
+executable_path ?= .rbenv/versions/3.4.0/bin/ruby
+executable_path_jit ?= .rbenv/versions/3.4.0/bin/ruby --yjit
 
 language ?= Ruby
 language_jit ?= Ruby_JIT
