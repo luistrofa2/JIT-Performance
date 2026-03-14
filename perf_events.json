@@ -1,0 +1,14 @@
+{
+  "events": [
+    "cycles",
+    "instructions",
+    "cache-misses",
+    "branch-misses",
+    "stalled-cycles-frontend",
+    "stalled-cycles-backend",
+    "resource_stalls.any",
+    "mem_trans_retired.load_latency_gt_128",
+    "cpu-cycles",
+    "uops_executed.stall_cycles"
+  ]
+}

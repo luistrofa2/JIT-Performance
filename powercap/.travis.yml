@@ -1,0 +1,42 @@
+os:
+  - linux
+
+dist: jammy
+
+arch:
+  - amd64
+  - arm64
+  - ppc64le
+  - s390x
+
+matrix:
+  include:
+    # Different distros and compilers on amd64
+    - dist: jammy
+      compiler: gcc
+    - dist: jammy
+      compiler: clang
+    - dist: focal
+      compiler: gcc
+    - dist: focal
+      compiler: clang
+    # Different architectures, gcc only
+    # We test these b/c Debian and Ubuntu packaging builds them
+    - arch: arm64
+    - arch: ppc64le
+    - arch: s390x
+
+language: c
+
+script:
+  - mkdir _build
+  - cd _build
+  # Test build with stricter flags
+  - export CFLAGS="-D_FORTIFY_SOURCE=2 -fstack-protector -g3 -pedantic -Wall -Wextra -Wbad-function-cast -Wcast-align
+      -Wcast-qual -Wdisabled-optimization -Wendif-labels -Wfloat-conversion -Wfloat-equal -Wformat=2 -Wformat-nonliteral
+      -Winline -Wmissing-declarations -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wpointer-arith -Wshadow
+      -Wsign-conversion -Wstrict-prototypes -Wstack-protector -Wundef -Wwrite-strings
+      -Werror"
+  - cmake .. -DCMAKE_C_FLAGS="$CFLAGS"
+  - cmake --build .
+  - ctest --verbose
