@@ -1,3 +1,11 @@
+### THE BENCHMARK GAME
+
+Study was done with a set of benchmarks predefined with a different range of problems being tackled. [The Computer Language 25.03 Benchmarks Game](https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html)
+
+
+[zip'd benchmarks source code](https://salsa.debian.org/benchmarksgame-team/benchmarksgame/-/blob/master/public/download/benchmarksgame-sourcecode.zip) contains all benchmarks for this study and more. However, these raw files need some treatment in order to be exectuable for the RAPL measure script. Consequently, the needed benchmarks are already sorted in the Languages folder.
+
+
 ## Requirements
 
 - Debian-based Linux distributions
@@ -310,3 +318,5 @@ Removes generated files and cleans up the project directory.
 1. The `config.env` file contains the paths to all interpreters and compilers installed on your machine - you may need to update these paths to match your system configuration.
 
 2. When installing pandas library for python, a virtual environment is created. So if pandas is needed. Before running `measure.sh` activate virtual environment with `source venv/bin/activate`
+
+3. RAPL framework provides more options and configurations which were not used in this study. As a result, any configuration that is changed, might yield different outcomes.
