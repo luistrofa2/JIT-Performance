@@ -7,8 +7,10 @@ interval ?= 100
 program ?= binarytrees.php
 program_name ?= binarytrees
 
-executable_path ?= php -c php.ini -d opcache.jit=off -d opcache.jit_buffer_size=0
-executable_path_jit ?= php -c php.ini -d opcache.enable=1 -d opcache.enable_cli=1 -d opcache.jit=1235 -d opcache.jit_buffer_size=64M
+include ../../../config.env
+
+executable_path ?= $(PHP_PATH)
+executable_path_jit ?= $(PHP_PATH_JIT)
 
 language ?= PHP
 language_jit ?= PHP_JIT
@@ -16,12 +18,12 @@ language_jit ?= PHP_JIT
 INPUT_binarytrees:=21
 INPUT_fannkuchredux:=12
 INPUT_fasta:=25000000
-INPUT_knucleotide:=0 < ../../knucleotide-input25000000.txt
+INPUT_knucleotide:=0 < ../../Inputs/$(INPUT_FILE_25M)
 INPUT_mandelbrot:=16000
 INPUT_nbody:=50000000
 INPUT_pidigits:=10000
-INPUT_regexredux:=0 < ../../regexredux-input5000000.txt
-INPUT_revcomp:=0 < ../../revcomp-input5000000.txt
+INPUT_regexredux:=0 < ../../Inputs/$(INPUT_FILE_5M)
+INPUT_revcomp:=0 < ../../Inputs/$(INPUT_FILE_5M)
 INPUT_spectralnorm:=5500
 
 export n_times

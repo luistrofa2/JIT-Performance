@@ -16,6 +16,53 @@ Install all dependencies by running:
 sudo bash scripts/install.sh
 ```
 
+5. Additional libraries for the programming languages to work.
+```bash
+sudo bash scripts/install_dependencies.sh
+```
+
+## Required Programming Languages
+1. Erlang
+```bash
+sudo bash scripts/erlang_setup.sh
+```
+
+2. Java
+```bash
+sudo bash scripts/java_setup.sh
+```
+
+3. Javascript
+```bash
+sudo bash scripts/javascript_setup.sh
+```
+
+4. Lua/LuaJIT
+```bash
+sudo bash scripts/lua_setup.sh
+```
+
+5. PHP
+```bash
+sudo bash scripts/php_setup.sh
+```
+
+6. Ruby
+```bash
+bash scripts/ruby_setup.sh
+```
+
+7. Python/Pypy
+```bash
+sudo bash scripts/python_setup.sh
+```
+
+## Inputs Preparation
+Some benchmarks require an input file of different dimensions. These are recreated with the output generated from the fasta benchmark.
+```bash
+bash scripts/generate_inputs.sh
+```
+
 ## Prerequisites and Configuration
 
 Before running measurements, you need to configure the following:
@@ -45,10 +92,7 @@ export LANG=C.UTF-8
 ```
 
 ### 4. Power Caps Configuration
-The script uses power caps values defined in `POWER_CAPS` array. By default, it's set to `(-1)` which means no power capping. You can modify this in the script to test different power caps:
-```bash
-POWER_CAPS=(7 11 15)  # Test with 7W, 11W, and 15W power caps
-```
+The script uses power caps values defined in `POWER_CAPS` array. By default, it's set to `(-1)` which means no power capping. For this study, no power cap adjustment is needed, so leave it as default. If there is an interest to change it, read up on the RAPL README.
 
 ---
 
@@ -76,18 +120,6 @@ sudo -E bash scripts/measure.sh Python "C#" Rust
 ```
 If a specified language or directory is not found, the script will exit with an error message.
 
-**NOTE 1**: To collect CPU performance metrics (using Linux perf) for all programs, run the measurement script with the `-perf` flag:
-```bash
-sudo -E bash scripts/measure.sh -perf <language1> [language2] ... | all
-```
-This will aggregate all results in the top-level `perf_stats.csv` file.
-
-**NOTE 2**: To collect CPU performance metrics over time for all programs, run the measurement script with the `-overtime` flag:
-```bash
-sudo -E bash scripts/measure.sh -overtime <language1> [language2] ... | all
-```
-This will aggregate all results in the top-level `measurements_ot.csv` file.
-
 ### Automatic System Restoration
 The measurement script automatically handles system cleanup:
 - **Wi-Fi**: Automatically restored when the script completes or encounters an error
@@ -111,10 +143,6 @@ Replace `XX` with the number of seconds to idle (sleep) before measuring the tem
 The output will be saved to `/tmp/cores_temperature.txt`.
 
 ---
-
-## Powercap Calibration
-
-To determine the most energy-efficient power cap setting for your system, you must specify custom programs for calibration. The tool supports both compiled and interpreted languages.
 
 ### Usage
 
@@ -236,21 +264,7 @@ make compile
 
 Compiles the source code into an optimized executable binary (when possible).
 
-## 2. `run`
-
-**Command:**
-```sh
-make run
-```
-
-Runs the program - either runs a executable binary or runs a interpreted program.
-
-**Command executed:**
-```sh
-./my_program [input]
-```
-
-## 3. `measure`
+## 2. `measure`
 
 **Command:**
 ```sh
@@ -265,55 +279,22 @@ Measures energy consumption and executing time by running the program using the 
 sudo ./main "./my_program [input]" [language] [program] $(n_times) $(variance) $(time_out_limit) $(sleep_secs)
 ```
 
-## 4. `perf`
+## 3. `measure_jit`
 
 **Command:**
 ```sh
-sudo make perf
+make measure_jit
 ```
-Uses Linux `perf` to gather the following CPU performance metrics expressed in `perf_events.json`:
 
-| Metric                              | Description                                                          |
-|-------------------------------------|----------------------------------------------------------------------|
-| `cycles`                            | The total number of CPU cycles consumed by the program.             |
-| `instructions`                      | The total number of instructions executed by the program.           |
-| `cache-misses`                      | The total number of cache misses (both data and instruction cache). |
-| `branch-misses`                     | The total number of branch prediction misses.                       |
-| `stalled-cycles-frontend`           | The number of cycles the instruction fetch unit was stalled.        |
-| `stalled-cycles-backend`            | The number of cycles the instruction execution unit was stalled.    |
-| `resource_stalls.any`               | Total number of cycles where execution was stalled due to resource limitations. |
-| `mem_trans_retired.load_latency_gt_128` | Number of memory transactions with load latency greater than 128 cycles. |
-| `cpu-cycles`                        | Total number of CPU cycles, a repeat of the `cycles` metric.        |
-| `uops_executed.stall_cycles`        | Number of cycles during which micro-operations (uops) were stalled. |
-
-## 5. `overtime`
-
-**Command:**
-```sh
-sudo make overtime
-```
-Collects the following metrics:
-
-|      Metric       | Description                                                                 |
-|-------------------|-----------------------------------------------------------------------------|
-| **Language**      | Programming language                                                        |
-| **Program**       | Program name                                                                |
-| **Powercap**      | Power cap value applied (Watts)                                             |
-| **Package**       | Energy used by the full socket (cores + GPU + other components)             |
-| **Core**          | Energy used by CPU cores and caches                                         |
-| **GPU**           | Energy used by GPU                                                          |
-| **DRAM**          | Energy used by RAM                                                          |
-| **Timestamp**     | Timestamp for each measurement interval (in milliseconds)                   |
-| **Temperature**   | Average core temperature at a certain timestamp (in Celsius)                |
-
-This command runs a program once and, over time, collects all the metrics listed above at each timestamp interval.
+**Purpose:**  
+Measures energy consumption and executing time by running the program using the RAPL interface.
 
 **Command breakdown:**
 ```sh
-sudo ./main --over-time "$(command)" $(interval) $(language) $(program) -powercap $(powercap) -sleep-secs $(sleep_secs) -variance $(variance)
+sudo ./main "./my_program [input]" [language] [program] $(n_times) $(variance) $(time_out_limit) $(sleep_secs)
 ```
 
-## 6. `clean`
+## 4. `clean`
 
 **Command:**
 ```sh
@@ -324,32 +305,8 @@ Removes generated files and cleans up the project directory.
 
 ---
 
-## Over-time session mode
-
-This feature allows running a program while a background thread records the energy consumption of the **Package**, **Core**, **DRAM**, and **GPU** components during its execution.  
-You can specify an **interval** (in milliseconds) that determines how often the measurements are recorded.
-
-Usage:
-
-```bash
-sudo -E ./main --over-time "<command>" <interval-ms> <language> <program> [ -powercap WATT ] [ -sleep-secs SECS ]
-```
-
-Options:
-- `<command>`: Command to execute while logging (quote if it contains spaces).
-- `<interval-ms>`: Logging interval in milliseconds (positive integer).
-- `<language>`: Programming language label (e.g., `C`, `Python`).
-- `<program>`: Program identifier/name used in CSV output.
-- `-powercap WATTS`: Optional power cap in watts (use `-1` for no cap). Defaults to `-1`.
-- `-sleep-secs SECS`: Optional quick temperature calibration sleep (seconds) used before measuring. Defaults to `30`.
-
-Example:
-
-```bash
-# Log every 100 ms while running a program once and do a temperature calibration of 60 seconds
-sudo -E ./main --over-time "./my_program" 100 C my_program -powercap 15 -sleep-secs 60
-```
----
 ### NOTE
 
 1. The `config.env` file contains the paths to all interpreters and compilers installed on your machine - you may need to update these paths to match your system configuration.
+
+2. When installing pandas library for python, a virtual environment is created. So if pandas is needed. Before running `measure.sh` activate virtual environment with `source venv/bin/activate`

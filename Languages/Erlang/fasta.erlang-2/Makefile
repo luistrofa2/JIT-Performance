@@ -7,8 +7,10 @@ interval ?= 100
 program ?= binarytrees.erl
 program_name ?= binarytrees
 
-executable_path ?= otp_src_27.0_no_jit/bin/erl
-executable_path_jit ?= otp_src_27.0/bin/erl
+include ../../../config.env
+
+executable_path ?= $(ERLANG_PATH)
+executable_path_jit ?= $(ERLANG_PATH_JIT)
 
 language ?= Erlang
 language_jit ?= Erlang_JIT
@@ -16,12 +18,12 @@ language_jit ?= Erlang_JIT
 INPUT_binarytrees:=21
 INPUT_fannkuchredux:=12
 INPUT_fasta:=25000000
-INPUT_knucleotide:=0 < ../../Inputs/knucleotide-input250000.txt
+INPUT_knucleotide:=0 < ../../Inputs/$(INPUT_FILE_250k)
 INPUT_mandelbrot:=16000
 INPUT_nbody:=50000000
 INPUT_pidigits:=10000
-INPUT_regexredux:=0 < ../../Inputs/regexredux-input5000000.txt
-INPUT_revcomp:=0 < ../../Inputs/revcomp-input250000.txt
+INPUT_regexredux:=0 < ../../Inputs/$(INPUT_FILE_5M)
+INPUT_revcomp:=0 < ../../Inputs/$(INPUT_FILE_250k)
 INPUT_spectralnorm:=5500
 
 export n_times

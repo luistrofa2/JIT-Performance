@@ -7,8 +7,10 @@ interval ?= 100
 program ?= binarytrees.ruby
 program_name ?= binarytrees
 
-executable_path ?= .rbenv/versions/3.4.0/bin/ruby
-executable_path_jit ?= .rbenv/versions/3.4.0/bin/ruby --yjit
+include ../../../config.env
+
+executable_path ?= $(RUBY_PATH)
+executable_path_jit ?= $(RUBY_PATH_JIT)
 
 language ?= Ruby
 language_jit ?= Ruby_JIT
@@ -16,12 +18,12 @@ language_jit ?= Ruby_JIT
 INPUT_binarytrees:=21
 INPUT_fannkuchredux:=12
 INPUT_fasta:=25000000
-INPUT_knucleotide:=0 < ../../knucleotide-input25000000.txt
+INPUT_knucleotide:=0 < ../../Inputs/$(INPUT_FILE_25M)
 INPUT_mandelbrot:=16000
 INPUT_nbody:=50000000
 INPUT_pidigits:=10000
-INPUT_regexredux:=0 < ../../regexredux-input5000000.txt
-INPUT_revcomp:=0 < ../../revcomp-input5000000.txt
+INPUT_regexredux:=0 < ../../Inputs/$(INPUT_FILE_5M)
+INPUT_revcomp:=0 < ../../Inputs/$(INPUT_FILE_5M)
 INPUT_spectralnorm:=5500
 
 export n_times

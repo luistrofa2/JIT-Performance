@@ -163,50 +163,24 @@ for cap in "${POWER_CAPS[@]}"; do
                 echo "Handling benchmark_name: $benchmark_name"
                 echo "Handling benchmark_name_no_extension: $benchmark_name_no_extension"
 
-                if [ $lang == "Java" ]; then
-                    make measure program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
-
-                    if [ -f "measurements.csv" ]; then
-                        tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
-                    else
-                        echo "Warning: measurements.csv not found in $lang_dir"
-                    fi
-
-                    make measure_Xint program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
-
-                    if [ -f "measurements.csv" ]; then
-                        tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
-                    else
-                        echo "Warning: measurements.csv not found in $lang_dir"
-                    fi
-                    make measure_XComp program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
-
-                    if [ -f "measurements.csv" ]; then
-                        tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
-                    else
-                        echo "Warning: measurements.csv not found in $lang_dir"
-                    fi
-
+                make compile program="$benchmark_name" program_name="$benchmark_name_no_extension"
+                make measure program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
+                
+                if [ -f "measurements.csv" ]; then
+                    tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
                 else
-                    make compile program="$benchmark_name" program_name="$benchmark_name_no_extension"
-                    make measure program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
-
-                    if [ -f "measurements.csv" ]; then
-                        tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
-                    else
-                        echo "Warning: measurements.csv not found in $lang_dir"
-                    fi
-                    
-                    make measure_jit program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
-
-                    if [ -f "measurements.csv" ]; then
-                        tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
-                    else
-                        echo "Warning: measurements.csv not found in $lang_dir"
-                    fi
-                    make clean
+                    echo "Warning: measurements.csv not found in $lang_dir"
+                fi
+                
+                make measure_jit program="$benchmark_name" program_name="$benchmark_name_no_extension" n_times=$NTIMES powercap="$cap" time_out_limit=$TIME_OUT_LIMIT variance=$VARIANCE sleep_secs=$IDLE_SECONDS
+                
+                if [ -f "measurements.csv" ]; then
+                    tail -n +2 "measurements.csv" >> "../../../$OUT_CSV"
+                else
+                    echo "Warning: measurements.csv not found in $lang_dir"
                 fi
 
+                make clean
                 cd - > /dev/null
 
             else
